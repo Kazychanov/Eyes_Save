@@ -27,7 +27,7 @@ namespace KazychanovEyesSave
       Manager.MainFrame = MainFrame;
     }
 
-    private void BtnBack_Click(object sender, RoutedEventArgs e)
+    public void BtnBack_Click(object sender, RoutedEventArgs e)
     {
       Manager.MainFrame.GoBack();
     }

@@ -39,23 +39,25 @@
       <Image Name="LogoImage" Stretch="UniformToFill" MinHeight="50" Height="100" Width="100"
            HorizontalAlignment="Center" Margin="5">
         <Image.Source>
-          <Binding Path="Logo" TargetNullValue="resources.png"/>
+          <Binding Path="Logo">
+            <Binding.TargetNullValue>
+              <ImageSource>
+                img/picture.png
+              </ImageSource>
+            </Binding.TargetNullValue>
+          </Binding>
         </Image.Source>
       </Image>
       <Button Content="Изменить" Name="ChangePictureBtn" Click="ChangePictureBtn_Click"/>
     </StackPanel>
+    
     <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Horizontal">
       <TextBlock Text="Тип агента" FontSize="15" Height="20" Width="100" Margin="5"/>
-      <ComboBox FontSize="15" Height="25" Width="100" Name="ComboType"
-              SelectedItem="(Binding AgentTypeID)">
-        <TextBlock Text="ООО"/>
-        <TextBlock Text="ИП"/>
-        <TextBlock Text="МЖК"/>
-        <TextBlock Text="ПЖСК"/>
-        <TextBlock Text="ЗАО"/>
-        <TextBlock Text="ПАО"/>
+      <ComboBox FontSize="15" Height="25" Width="100" Name="ComboType" SelectionChanged="ComboType_SelectionChanged"
+              DisplayMemberPath="Title"  SelectedValuePath="ID" SelectedValue="{Binding AgentTypeID}">
       </ComboBox>
     </StackPanel>
+    
     <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal">
       <TextBlock Text="Приоритет" FontSize="15" Height="20" Width="100" Margin="5"/>
       <TextBox Text="{Binding Priority}" FontSize="15" Height="20" Width="100"/>

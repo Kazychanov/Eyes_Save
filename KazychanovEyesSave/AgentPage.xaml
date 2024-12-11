@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:KazychanovEyesSave"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="AgentPage" FontFamily="Century Gothic">
+      Title="AgentPage" FontFamily="Century Gothic" IsVisibleChanged="Page_IsVisibleChanged">
 
   <Grid>
     <Grid.RowDefinitions>
@@ -34,7 +34,7 @@
         <TextBlock>ЗАО</TextBlock>
         <TextBlock>МКК</TextBlock>
         <TextBlock>ОАО</TextBlock>
-        <TextBlock>ЗАО</TextBlock>
+        <TextBlock>ПАО</TextBlock>
       </ComboBox>
       <Button Name="BtnAdd" Content="Добавить" Click="BtnAdd_Click"/>
     </StackPanel>
@@ -44,7 +44,7 @@
           <Grid>
             <Grid.ColumnDefinitions>
               <ColumnDefinition Width="*"></ColumnDefinition>
-              <ColumnDefinition Width="*"></ColumnDefinition>
+              <ColumnDefinition Width="400"></ColumnDefinition>
               <ColumnDefinition Width="*"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
@@ -55,7 +55,10 @@
             </Grid.RowDefinitions>
 
             <!-- Кнопка "Редактировать" -->
-            <Button Name="BtnEdit" Content="Редактировать" Click="BtnEdit_Click" Grid.Column="2" Grid.Row="2" HorizontalAlignment="Right"/>
+            <StackPanel Orientation="Vertical" HorizontalAlignment="Right" Grid.Column="3">
+              <Button Name="BtnEdit" Content="Редактировать" Click="BtnEdit_Click" Grid.Column="2" Grid.Row="2"/>
+            </StackPanel>
+            
 
             <!-- Изображение -->
             <Image Width="150" Grid.Column="0" Stretch="UniformToFill" HorizontalAlignment="Center" Grid.RowSpan="4">
