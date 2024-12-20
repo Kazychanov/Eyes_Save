@@ -53,6 +53,12 @@ namespace KazychanovEyesSave
         case 2:
           _currentAgent = _currentAgent.OrderByDescending(agent => agent.Title).ToList();
           break;
+        case 3:
+          _currentAgent = _currentAgent.OrderBy(agent => agent.Discount).ToList();
+          break;
+        case 4:
+          _currentAgent = _currentAgent.OrderByDescending(agent => agent.Discount).ToList();
+          break;
         case 5:
           _currentAgent = _currentAgent.OrderBy(agent => agent.Priority).ToList();
           break;
@@ -188,5 +194,50 @@ namespace KazychanovEyesSave
         UpdateAgents();
       }
     }
+
+    private void ChangePriorityButton_Click(object sender, RoutedEventArgs e)
+    {
+      int maxPriority = 0;
+      foreach (Agent agent in AgentListView.SelectedItems)
+      {
+        if (agent.Priority > maxPriority) { maxPriority = agent.Priority; }
+      }
+      SetPriory MyWindow = new SetPriory(maxPriority);
+      MyWindow.ShowDialog();
+      int s = Convert.ToInt32(MyWindow.PriorySet.Text);
+      if (string.IsNullOrEmpty(MyWindow.PriorySet.Text) || s < 0)
+      {
+        MessageBox.Show("Информация не произошло");
+      }
+      else
+      {
+        int newPriority = Convert.ToInt32(MyWindow.PriorySet.Text);
+        foreach(Agent agent in AgentListView.SelectedItems)
+        {
+          agent.Priority = newPriority;
+        }
+        var history = KazychanovEyesSaveEntities.GetContext().AgentPriorityHistory.ToList();
+        try
+        {
+          KazychanovEyesSaveEntities.GetContext().SaveChanges();
+          MessageBox.Show("Ифнормация сохранена");
+          UpdateAgents();
+        }
+        catch (Exception ex)
+        {
+          MessageBox.Show(ex .Message.ToString());
+        }
+      }
+    }
+    private void AgentListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+      if (AgentListView.SelectedItems.Count > 1)
+      {
+        ChangePriorityButton.Visibility = Visibility.Visible;
+      }
+      else
+        ChangePriorityButton.Visibility = Visibility.Hidden;
+    }
+
   }
 }

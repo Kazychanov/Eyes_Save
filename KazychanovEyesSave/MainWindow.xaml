@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:KazychanovEyesSave"
         mc:Ignorable="d"
-        Title="Kazychanov" Height="450" Width="800" FontFamily="Century Gothic" Icon="img\Глазки-save.ico">
+        Title="Kazychanov" Height="600" Width="1000" FontFamily="Century Gothic" Icon="img\Глазки-save.ico">
   <Grid ShowGridLines="True" Background="#FFE9F9">
     <Grid.RowDefinitions>
       <RowDefinition Height="75"/>

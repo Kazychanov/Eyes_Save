@@ -9,6 +9,8 @@
       Title="AddEditPage">
 
   <Grid>
+
+
     <Grid.RowDefinitions>
       <RowDefinition Height="*"/>
       <RowDefinition Height="*"/>
@@ -20,8 +22,11 @@
     </Grid.RowDefinitions>
     <Grid.ColumnDefinitions>
       <ColumnDefinition Width="*"/>
+      <ColumnDefinition Width="*"/>
       <ColumnDefinition Width="auto"/>
     </Grid.ColumnDefinitions>
+    
+    <!--первый столбец-->
     <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal">
       <TextBlock Text="Наименование" FontSize="15" Height="20" MinWidth="120" Width="auto" Margin="5"/>
       <TextBox Text="{Binding Title}" FontSize="15" Height="20" Width="400"/>
@@ -58,6 +63,7 @@
       </ComboBox>
     </StackPanel>
     
+    <!--второй столбец-->
     <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal">
       <TextBlock Text="Приоритет" FontSize="15" Height="20" Width="100" Margin="5"/>
       <TextBox Text="{Binding Priority}" FontSize="15" Height="20" Width="100"/>
@@ -78,10 +84,36 @@
       <TextBlock Text="Email" FontSize="15" Height="20" Width="100" Margin="5"/>
       <TextBox Text="{Binding Email}" FontSize="15" Height="20" Width="200"/>
     </StackPanel>
+    
+    <!--реализация-->
+    <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Vertical" VerticalAlignment="Center">
+      <TextBlock Text="История реализаций" Margin="5" FontSize="15"/>
+      <ComboBox Name="Realize" DisplayMemberPath="Datacount" SelectedValuePath="AgentID" FontSize="15" Margin="5"/>
+    </StackPanel>
+    <StackPanel Grid.Row="1" Grid.Column="2" Orientation="Vertical" VerticalAlignment="Center">
+      <Button Name="Add" Click="Add_Click" Content="Реализация +" Margin="5"/>
+      <Button Name="Delete" Click="Delete_Click" Content="Реализация -" Margin="5"/>
+    </StackPanel>
+    <StackPanel Grid.Row="2" Grid.Column="2" Orientation="Vertical" VerticalAlignment="Center">
+      <TextBlock Text="Поиск продуктов" Margin="5" FontSize="15"/>
+      <TextBox Name="SearchProduct" TextChanged="SearchProduct_TextChanged" Margin="5" FontSize="15"/>
+    </StackPanel>
+    <StackPanel Grid.Row="3" Grid.Column="2" Orientation="Vertical" VerticalAlignment="Center">
+      <ComboBox Name="CBoxProducts" DisplayMemberPath="Title" SelectedValuePath="ID" Margin="5" FontSize="15"/>
+      <TextBlock Text="Количество продуктов" Margin="5" FontSize="15"/>
+    </StackPanel>
+    <StackPanel Grid.Row="4" Grid.Column="2" Orientation="Vertical" VerticalAlignment="Center">
+      <TextBox Name="ProductCount" Margin="5" FontSize="15"/>
+      <DatePicker Name="SaleData" Margin="5" FontSize="15"/>
+    </StackPanel>
+
+    <!--сохраненине и удаление-->
     <StackPanel Grid.Column="1" Grid.Row="6" Orientation="Horizontal">
       <Button Content="Сохранить" Name="SaveBtn" Click="SaveBtn_Click" Margin="5"/>
       <Button Content="Удалить" Name="DeleteBtn" Click="DeleteBtn_Click" Margin="5"
             Opacity="{Binding ID}"/>
     </StackPanel>
+
+
   </Grid>
 </Page>

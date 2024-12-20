@@ -11,6 +11,7 @@ namespace KazychanovEyesSave
 {
   using System;
   using System.Collections.Generic;
+  using System.Windows.Media;
 
   public partial class Agent
   {
@@ -21,7 +22,18 @@ namespace KazychanovEyesSave
       this.ProductSale = new HashSet<ProductSale>();
       this.Shop = new HashSet<Shop>();
     }
-
+    public int ProductCountSales
+    {
+      get
+      {
+        decimal p = 0;
+        foreach(ProductSale sales in ProductSale)
+        {
+          p += sales.Cost;
+        }
+        return (int)p;
+      }
+    }
     public int ID { get; set; }
     public int AgentTypeID { get; set; }
     public string Title { get; set; }
@@ -41,6 +53,49 @@ namespace KazychanovEyesSave
     public string DirectorName { get; set; }
     public string INN { get; set; }
     public string KPP { get; set; }
+
+    public int Discount
+    {
+      get
+      {
+        int p;
+        if (this.ProductCountSales >= 0 && this.ProductCountSales < 10000)
+        {
+          p = 0;
+        }
+        else if (this.ProductCountSales >= 10000 && this.ProductCountSales < 50000)
+        {
+          p = 5;
+        }
+        else if (this.ProductCountSales >= 50000 && this.ProductCountSales < 150000)
+        {
+          p = 10;
+        }
+        else if (this.ProductCountSales >= 150000 && this.ProductCountSales < 500000)
+        {
+          p = 20;
+        }
+        else
+        {
+          p = 25;
+        }
+        return p;
+      }
+    }
+    public SolidColorBrush FontStyle
+    {
+      get
+      {
+        if (this.Discount > 0)
+        {
+          return (SolidColorBrush)new BrushConverter().ConvertFromString("LightGreen");
+        }
+        else
+        {
+          return (SolidColorBrush)new BrushConverter().ConvertFromString("White");
+        }
+      }
+    }
 
     public virtual AgentType AgentType { get; set; }
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

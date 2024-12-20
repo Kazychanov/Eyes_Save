@@ -102,6 +102,9 @@
     <Compile Include="ProductType.cs">
       <DependentUpon>KazychanovModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="SetPriory.xaml.cs">
+      <DependentUpon>SetPriory.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Shop.cs">
       <DependentUpon>KazychanovModel.tt</DependentUpon>
     </Compile>
@@ -145,6 +148,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="ProductPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="SetPriory.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

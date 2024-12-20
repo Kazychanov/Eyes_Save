@@ -1,24 +1,19 @@
 ﻿using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace KazychanovEyesSave
 {
   public partial class AddEditPage : Page
   {
     private Agent _currentAgent = new Agent();
+    private ProductSale _currentProductSale = new ProductSale();
+    private CollectionViewSource _productsView;
     public AddEditPage(Agent SelectedAgent)
     {
       InitializeComponent();
@@ -26,13 +21,27 @@ namespace KazychanovEyesSave
       if (SelectedAgent != null)
         _currentAgent = SelectedAgent;
 
-
+      DataContext = _productsView;
       DataContext = _currentAgent;
 
       ComboType.ItemsSource = KazychanovEyesSaveEntities.GetContext().AgentType.ToList();
       ComboType.DisplayMemberPath = "Title"; // Отображаемые названия
       ComboType.SelectedValuePath = "ID";   // Идентификатор для привязки
       ComboType.SelectedValue = _currentAgent.AgentTypeID; // Устанавливаем начальное значение
+
+      int selectAgentID = _currentAgent.ID;
+      var FilterSale = KazychanovEyesSaveEntities.GetContext().ProductSale.Where(sale => sale.AgentID == selectAgentID).ToList();
+      Realize.ItemsSource = FilterSale;
+      Realize.DisplayMemberPath = "Datacount";
+      Realize.SelectedValuePath = "AgentID";
+
+      _productsView = new CollectionViewSource();
+
+      var products = KazychanovEyesSaveEntities.GetContext().Product.ToList();
+      _productsView.Source = products;
+      CBoxProducts.ItemsSource = _productsView.View; // Привязываем View к ComboBox
+      CBoxProducts.DisplayMemberPath = "Title";
+      CBoxProducts.SelectedValuePath = "ID";
     }
 
     private void SaveBtn_Click(object sender, RoutedEventArgs e)
@@ -72,21 +81,21 @@ namespace KazychanovEyesSave
         return;
       }
 
-        if (_currentAgent.ID == 0)
-        {
-          KazychanovEyesSaveEntities.GetContext().Agent.Add(_currentAgent);
-        }
-        try
-        {
-          KazychanovEyesSaveEntities.GetContext().SaveChanges();
-          MessageBox.Show("Информация сохранена");
-          Manager.MainFrame.GoBack();
-        }
-        catch (Exception ex)
-        {
-          MessageBox.Show(ex.Message.ToString());
-        }
-      
+      if (_currentAgent.ID == 0)
+      {
+        KazychanovEyesSaveEntities.GetContext().Agent.Add(_currentAgent);
+      }
+      try
+      {
+        KazychanovEyesSaveEntities.GetContext().SaveChanges();
+        MessageBox.Show("Информация сохранена");
+        Manager.MainFrame.GoBack();
+      }
+      catch (Exception ex)
+      {
+        MessageBox.Show(ex.Message.ToString());
+      }
+
 
 
     }
@@ -126,13 +135,97 @@ namespace KazychanovEyesSave
           MessageBox.Show(ex.Message.ToString());
         }
       }
-      
+
     }
 
 
     private void ComboType_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-      
+
+    }
+
+    private void SearchProduct_TextChanged(object sender, TextChangedEventArgs e)
+    {
+      string searchText = SearchProduct.Text.ToLower();
+      _productsView.View.Filter = o =>
+      {
+        Product p = o as Product;
+        return p != null && p.Title.ToLower().Contains(searchText);
+      };
+    }
+
+    private void Delete_Click(object sender, RoutedEventArgs e)
+    {
+      if (MessageBox.Show("Вы точно хотите выполнить удаление?", "Внимание!", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+      {
+        try
+        {
+          if (Realize.SelectedItem != null) // Проверка на наличие выбранного элемента
+          {
+            ProductSale selectedHistory = (ProductSale)Realize.SelectedItem; // Получаем выбранный объект
+            KazychanovEyesSaveEntities.GetContext().ProductSale.Remove(selectedHistory);
+            KazychanovEyesSaveEntities.GetContext().SaveChanges();
+            MessageBox.Show("Информация удалена!");
+            Manager.MainFrame.GoBack();
+          }
+          else
+          {
+            MessageBox.Show("Пожалуйста, выберите запись для удаления.");
+          }
+        }
+        catch (Exception ex)
+        {
+          MessageBox.Show(ex.Message.ToString());
+        }
+      }
+    }
+
+    private void Add_Click(object sender, RoutedEventArgs e)
+    {
+      StringBuilder errors = new StringBuilder();
+      if (CBoxProducts.SelectedItem == null)
+        errors.AppendLine("Укажите продукт");
+      if (string.IsNullOrWhiteSpace(ProductCount.Text))
+        errors.AppendLine("Укажите количество продуктов");
+      bool isProductCountDigits = true;
+      for (int i = 0; i < ProductCount.Text.Length; i++)
+      {
+        if (ProductCount.Text[i] < '0' || ProductCount.Text[i] > '9')
+        {
+          isProductCountDigits = false;
+        }
+      }
+      if (!isProductCountDigits)
+        errors.AppendLine("Укажите численное положительное продуктов");
+      if (ProductCount.Text == "0")
+      {
+        errors.AppendLine("Укажите количество продаж");
+      }
+      if (string.IsNullOrWhiteSpace(SaleData.Text))
+        errors.AppendLine("Укажите дату продажи");
+
+      if (errors.Length > 0)
+      {
+        MessageBox.Show(errors.ToString());
+        return;
+      }
+      _currentProductSale.AgentID = _currentAgent.ID;
+      _currentProductSale.ProductID = CBoxProducts.SelectedIndex + 1;
+      _currentProductSale.ProductCount = Convert.ToInt32(ProductCount.Text);
+      _currentProductSale.SaleDate = Convert.ToDateTime(SaleData.Text);
+      if (_currentProductSale.ID == 0)
+        KazychanovEyesSaveEntities.GetContext().ProductSale.Add(_currentProductSale);
+
+      try
+      {
+        KazychanovEyesSaveEntities.GetContext().SaveChanges();
+        MessageBox.Show("информация сохранена");
+        Manager.MainFrame.GoBack();
+      }
+      catch (Exception ex)
+      {
+        MessageBox.Show(ex.Message.ToString());
+      }
     }
   }
 }
